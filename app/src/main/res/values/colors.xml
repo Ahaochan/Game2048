@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#faf8ef</color>
+    <color name="colorPrimaryDark">#faf8ef</color>
+    <color name="colorAccent">#faf8ef</color>
+
+
+    <color name="text_title">#776e65</color>
+    <color name="text_classic">#FFD700</color>
+    <color name="text_time">#FF6347</color>
+    <color name="text_sub">#a1978d</color>
+
+    <color name="text_white">#f9f6f2</color>
+
+    <color name="bg_common">#a49381</color>
+    <color name="bg_classic">#edc53f</color>
+    <color name="bg_time">#f67c5f</color>
+
+    <color name="bg_btn">#bbad9e</color>
+
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="bgColor" format="color" />
+
+    <attr name="text" format="string" />
+    <attr name="textSize" format="dimension" />
+    <attr name="textColor" format="color" />
+    <attr name="radius" format="integer" />
+    <attr name="xRadius" format="integer" />
+    <attr name="yRadius" format="integer" />
+
+    <attr name="minWidth" format="dimension" />
+    <attr name="maxWidth" format="dimension" />
+    <attr name="gap" format="dimension"/>
+    <attr name="sharedPreference" format="string"/>
+
+    <declare-styleable name="IconButton">
+        <attr name="icon" />
+        <attr name="bgColor" />
+        <attr name="text" />
+        <attr name="textSize" />
+        <attr name="textColor" />
+        <attr name="radius" />
+        <attr name="xRadius" />
+        <attr name="yRadius" />
+        <attr name="minWidth" />
+        <attr name="maxWidth" />
+    </declare-styleable>
+
+    <declare-styleable name="GameLayout">
+        <attr name="radius" />
+        <attr name="bgColor" />
+        <attr name="gap" />
+        <attr name="sharedPreference"/>
+    </declare-styleable>
+</resources>
