@@ -8,6 +8,6 @@
 # build
 ```
 git clone https://github.com/Ahaochan/Game2048
-cd TabLayout
+cd Game2048
 ./gradlew build
 ```
