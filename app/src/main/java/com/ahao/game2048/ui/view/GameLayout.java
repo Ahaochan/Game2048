@@ -25,6 +25,8 @@ import com.ahao.androidlib.util.SharedPreferencesUtils;
 import com.ahao.game2048.R;
 import com.ahao.game2048.common.Common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,6 +58,8 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
     private int mColumn = DEFAULT_COLUMN;
     /** item */
     private GameItemView[] mItems;
+    /** 空item的index */
+    private List<Integer> nullIndexs;
 
     private Paint mPaint;
     /** item和GridLayout的背景圆角半径 */
@@ -175,6 +179,7 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
             mItems[i].setRadius(mRadius);
             mItems[i].setLayerType(View.LAYER_TYPE_HARDWARE, null);
         }
+        nullIndexs = new ArrayList<Integer>();
 
         /** 初始化计时器 */
         timerTask = new TimerTask() {
@@ -308,6 +313,7 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
     /** 往moveType方向滑动,滑动成功返回true */
     private boolean flingTo(int moveType) {
         boolean canMove = false;
+        nullIndexs.clear();
         for (int i = 0; i < mColumn; i++) {
             int[] row = new int[mColumn];
             for (int j = 0; j < mColumn; j++) {
@@ -332,12 +338,18 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
             /** 记录每个item移动的距离 */
             int[] move = moveAndmerge(row);
 
+
             /** 动画移动和实际移动 */
             for (int j = 0; j < mColumn; j++) {
                 int index = getIndexByAction(moveType, i, j);
                 moveByAnim(index, move[j], row[j], moveType);
-                mItems[index].setNumber(row[j]);
-
+                int num = row[j];
+                mItems[index].setNumber(num);
+                if(num!=0){
+                    nullIndexs.remove(Integer.valueOf(index));
+                } else {
+                    nullIndexs.add(index);
+                }
             }
         }
         return canMove;
@@ -437,12 +449,10 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
     /** 随机添加一个View */
     public void addRandomNum() {
         if(!isFull()) {
-            int index = MathUtils.randomInt(0, mColumn*mColumn);
-            if (mItems[index].getNumber() == 0) {
-                mItems[index].setNumber(Math.random() > 0.2d ? 2 : 4);
-            } else {/** 如果已经存在, 就重新找空位 */
-                addRandomNum();
-            }
+            int i = MathUtils.randomInt(0, nullIndexs.size());
+            int index = nullIndexs.get(i);
+            mItems[index].setNumber(Math.random() > 0.2d ? 2 : 4);
+            nullIndexs.remove(Integer.valueOf(index));
         } else {/** 如果已经填满了, 游戏结束 */
             isGameStart = false;
             onGameListener.onGameOver();
@@ -527,8 +537,10 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
             onGameListener.onTimeChange(mTime);
             onGameListener.onScoreChange(mScore, mBestScore);
         }
+        nullIndexs.clear();
         for (int i = 0; i < mItems.length; i++) {
             mItems[i].setNumber(0);
+            nullIndexs.add(i);
         }
         addRandomNum();
         addRandomNum();
@@ -536,9 +548,13 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
 
     /** 回复游戏参数 */
     public void restoreItems(){
+        nullIndexs.clear();
         for (int i = 0; i < mColumn*mColumn; i++) {
             int num = (int) SharedPreferencesUtils.init(mContext, spName).get(Common.ITEM+i, 0);
             mItems[i].setNumber(num);
+            if(num==0){
+                nullIndexs.add(i);
+            }
         }
         mBestScore = (int) SharedPreferencesUtils.init(mContext, spName).get(Common.SCORE_BEST, 0);
         mScore = (int) SharedPreferencesUtils.init(mContext, spName).get(Common.SCORE_NOW, 0);
