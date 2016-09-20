@@ -13,7 +13,7 @@ git clone https://github.com/Ahaochan/Game2048
 ```
 
 # apk download
-[v1.10](https://github.com/Ahaochan/Game2048/blob/master/app/app-release.apk)
+[v1.10](https://github.com/Ahaochan/Game2048/raw/master/app/ha2048.apk)
 
 
 #开发日志
