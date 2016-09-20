@@ -16,7 +16,6 @@ import com.ahao.game2048.ui.view.GameLayout;
  */
 public class GameFragment extends BaseFragment {
     private static final String TAG = "GameFragment";
-    private static final int TIMER = 0b00000001;
 
     /** 两种游戏模式 */
     private GameLayout timeGameLayout, classicGameLayout;
@@ -35,10 +34,13 @@ public class GameFragment extends BaseFragment {
     private int time;
     /** 是否为时间模式 */
     private boolean isTimeMode;
+    /** 是否为ha模式 */
+    private boolean isHa;
 
-    public static GameFragment newInstance(boolean isTimeMode) {
+    public static GameFragment newInstance(boolean isTimeMode, boolean isHa) {
         Bundle args = new Bundle();
         args.putBoolean(Common.GAME_MODE, isTimeMode);
+        args.putBoolean(Common.HA_MODE, isHa);
         GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
@@ -51,7 +53,7 @@ public class GameFragment extends BaseFragment {
 
     @Override
     protected void initView(View rootView) {
-        timeGameLayout = (GameLayout) rootView.findViewById(R.id.layout_time_game);
+        timeGameLayout    = (GameLayout) rootView.findViewById(R.id.layout_time_game);
         classicGameLayout = (GameLayout)rootView.findViewById(R.id.layout_classic_game);
         scoreText  = (TextView)    rootView.findViewById(R.id.text_score);
         bestText   = (TextView)    rootView.findViewById(R.id.text_best);
@@ -59,13 +61,11 @@ public class GameFragment extends BaseFragment {
         refreshBtn = (ImageButton) rootView.findViewById(R.id.btn_refresh);
         movesText  = (TextView)    rootView.findViewById(R.id.text_moves);
         timeText   = (TextView)    rootView.findViewById(R.id.text_time);
-        tipText   = (TextView)    rootView.findViewById(R.id.text_tip);
+        tipText    = (TextView)    rootView.findViewById(R.id.text_tip);
 
         /** 获取游戏模式 */
-        Bundle args = getArguments();
-        if(args!=null){
-            isTimeMode = args.getBoolean(Common.GAME_MODE, false);
-        }
+        isTimeMode = getArguments().getBoolean(Common.GAME_MODE, false);
+        isHa       = getArguments().getBoolean(Common.HA_MODE  , false);
 
         /** 根据游戏模式, 对布局进行隐藏显示, 并强引用使用的布局*/
         if(isTimeMode){
@@ -77,16 +77,18 @@ public class GameFragment extends BaseFragment {
             classicGameLayout.setVisibility(View.VISIBLE);
             currentLayout = classicGameLayout;
         }
+        /** 是否为ha模式 */
+        currentLayout.setHa(isHa);
 
         /** 获取当前游戏模式的最佳分数并显示 */
         int bestScore = currentLayout.getBestScore();
-        bestText.setText(convertScore(bestScore));
+        bestText.setText(convertBestScore(bestScore));
         /** 获取当前游戏模式的上一次的分数并显示 */
         int nowScore = currentLayout.getScore();
         scoreText.setText(convertScore(nowScore));
 
         /** 获取当前游戏模式的上一次的步数并显示 */
-        movesText.setText(currentLayout.getMoves()+" moves");
+        movesText.setText(getString(R.string.unit_move, currentLayout.getMoves()));
 
         /** 获取当前游戏模式的上一次的时间并显示 */
         time = currentLayout.getTime();
@@ -104,7 +106,7 @@ public class GameFragment extends BaseFragment {
             public void onGameOver() {
                 ObjectAnimator.ofFloat(tipText, "aplha", 0f, 1f).setDuration(1000).start();
                 ObjectAnimator.ofFloat(tipText, "translationY", -600f, 1f).setDuration(1000).start();
-                tipText.setText(getResources().getString(R.string.game_over));
+                tipText.setText(getString(isHa ? R.string.game_over_ha : R.string.game_over));
                 tipText.setVisibility(View.VISIBLE);
             }
 
@@ -112,7 +114,7 @@ public class GameFragment extends BaseFragment {
             public void onWin() {
                 ObjectAnimator.ofFloat(tipText, "aplha", 0f, 1f).setDuration(1000).start();
                 ObjectAnimator.ofFloat(tipText, "translationY", -600f, 1f).setDuration(1000).start();
-                tipText.setText(getResources().getString(R.string.game_win));
+                tipText.setText(getString(isHa ? R.string.game_win_ha : R.string.game_win));
                 tipText.setVisibility(View.VISIBLE);
             }
 
@@ -126,7 +128,7 @@ public class GameFragment extends BaseFragment {
 
             @Override
             public void onMove(int moves) {
-                movesText.setText(moves+" moves");
+                movesText.setText(getString(R.string.unit_move, moves));
                 if(tipText.getVisibility()==View.VISIBLE){
                     tipText.setVisibility(View.GONE);
                 }
@@ -135,14 +137,15 @@ public class GameFragment extends BaseFragment {
             @Override
             public void onScoreChange(int score, int best) {
                 scoreText.setText(convertScore(score));
-                bestText.setText(convertScore(best));
+                bestText.setText(convertBestScore(best));
             }
         });
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GameFragment.this.removeFragment();
+                currentLayout.add1024();
+//                GameFragment.this.removeFragment();
             }
         });
 
@@ -179,6 +182,15 @@ public class GameFragment extends BaseFragment {
         }else {
             sb.append(score);
         }
+        return sb.toString();
+    }
+
+    /** 对分数进行格式化转换, 化为 xx.x k 的类型 */
+    private String convertBestScore(int score){
+        StringBuilder sb = new StringBuilder();
+        if (isHa) sb.append("+");
+        sb.append(convertScore(score));
+        if (isHa) sb.append("s");
         return sb.toString();
 
     }

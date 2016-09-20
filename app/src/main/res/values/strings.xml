@@ -6,6 +6,7 @@
     <string name="time_trial">Time_trial</string>
     <string name="How_to_play">How to play</string>
     <string name="About_2048">About 2048</string>
+    <string name="unit_move">%1$d moves</string>
     
     <string name="score">SCORE</string>
     <string name="best">BEST</string>
@@ -21,4 +22,29 @@
     <string name="About_2048_part1">&#160;&#160;&#160;&#160;本项目高仿github开源项目2048,非JS开发,基本实现原生2048的所有效果.</string>
     <string name="About_2048_part2">如果发现bug,请务必提交到我的github上.</string>
     <string name="About_2048_part3">https://github.com/Ahaochan/game2048</string>
+
+
+
+    <string name="game_name_ha">204蛤</string>
+    <string name="How_to_play_ha">怎么续命</string>
+    <string name="About_2048_ha">关于续命</string>
+    <string name="dialog_title_ha">如果我们的铁骑继续前进?</string>
+    <string name="dialog_btn_pos">按M安轨</string>
+    <string name="dialog_btn_neg">保持克制</string>
+
+    <string name="score_ha">LIFE</string>
+    <string name="best_ha">BEST</string>
+    <string name="game_over_ha">还是要提高自己的\n姿势水平!</string>
+    <string name="game_win_ha">你可以和我\n谈笑风生了!</string>
+
+    <string name="How_to_play_part1_ha">通过在面板上不停续命.当两个拥有相同寿命的方块相撞时会合并成一个方块.</string>
+    <string name="How_to_play_part2_ha">当续命2048s时可以谈笑风生了</string>
+    <string name="How_to_play_part3_ha">当续无可续的时候,红衣男孩就钦定是你了</string>
+    <string name="How_to_play_part4_ha">想要一个更疯狂的续命吗？</string>
+    <string name="How_to_play_part5_ha">如果你认为传统的续命太容易了,尝试下疯狂续命吧!你的目标是存活并奉献出更多的生命.在这个模式,当续无可续的时候就会变成红衣男孩.</string>
+
+    <string name="About_2048_part1_ha">&#160;&#160;&#160;&#160;本项目高仿github开源项目2048,非JS开发,基本实现原生2048的所有效果.</string>
+    <string name="About_2048_part2_ha">如果发现bug,请务必到我的github上谈笑风生.</string>
+    <string name="About_2048_part3_ha">https://github.com/Ahaochan/game2048</string>
+
 </resources>

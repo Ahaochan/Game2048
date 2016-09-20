@@ -8,6 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="main_icon_button">
         <item name="android:padding">10dp</item>
         <item name="com.ahao.game2048:textSize">18sp</item>

@@ -16,7 +16,6 @@ public class Common {
     public static final String TIME       = "time";//所用时间
     public static final String TIPWIN     = "tip_win";//是否提醒胜利
 
+    public static final String HA_MODE  = "ha_mode";//ha模式
     public static final String GAME_MODE  = "game_mode";//游戏模式
-    public static final String GAME_CLASSIC_MODE = "classic_mode";//传统模式
-    public static final String GAME_TIME_MODE = "time_mode";//时间模式
 }

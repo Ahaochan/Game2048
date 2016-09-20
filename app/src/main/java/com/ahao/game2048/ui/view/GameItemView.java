@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
@@ -15,8 +16,10 @@ import android.view.animation.ScaleAnimation;
  */
 public class GameItemView extends View {
     private static final String TAG = "GameItemView";
-    private static final SparseArray<Integer> mBgColors = new SparseArray<Integer>();
-    private static final SparseArray<Integer> mTextColors = new SparseArray<Integer>();
+    private static final int MAX_VALUE = 16384;
+    private static final SparseIntArray mBgColors = new SparseIntArray();
+    private static final SparseIntArray mTextColors = new SparseIntArray();
+    private static final SparseArray<String> mHaTexts = new SparseArray<>();
 
     /** 初始化颜色 */
     static {
@@ -50,6 +53,22 @@ public class GameItemView extends View {
         mTextColors.put(4096  , Color.parseColor("#f9f6f2"));
         mTextColors.put(8192  , Color.parseColor("#f9f6f2"));
         mTextColors.put(16384 , Color.parseColor("#f9f6f2"));
+
+        mHaTexts.put(0     , "");
+        mHaTexts.put(2     , "扬州\n江少");
+        mHaTexts.put(4     , "中央\n大学");
+        mHaTexts.put(8     , "交通\n大学");
+        mHaTexts.put(16    , "长春\n一汽");
+        mHaTexts.put(32    , "上海\n市长");
+        mHaTexts.put(64    , "市委\n书记");
+        mHaTexts.put(128   , "螳臂\n当车");
+        mHaTexts.put(256   , "苟利\n国家");
+        mHaTexts.put(512   , "如履\n薄冰");
+        mHaTexts.put(1024  , "九八\n抗洪");
+        mHaTexts.put(2048  , "三个\n代表");
+        mHaTexts.put(4096  , "谈笑\n风生");
+        mHaTexts.put(8192  , "怒斥\n港记");
+        mHaTexts.put(16384 , "我很\n惭愧");
     }
 
     /** 主画笔 */
@@ -72,6 +91,8 @@ public class GameItemView extends View {
     private int mTextHeight;
     /** 文字范围宽度 */
     private int mTextWidth;
+    /** ha模式 */
+    private boolean isHa;
 
     public GameItemView(Context context) {
         super(context);
@@ -118,9 +139,17 @@ public class GameItemView extends View {
     /** 绘制数字*/
     private void drawNumber(Canvas canvas){
         if(getNumber()>0){
-            float x = (getWidth()-mTextWidth)*1.0f/2;
-            float y = getHeight()*1.0f/2+mTextHeight*1.0f/2;
-            canvas.drawText(mText, x, y, mTextPaint);
+            if (isHa) {
+                String[] strs = mText.split("\n");
+                float x = 1.0F * (getWidth() - mTextWidth) / 2.0F;
+                float y = 1.0F * (getHeight() - mTextHeight * strs.length) / 2.0F + this.mTextHeight;
+                for (int i = 0; i < strs.length; i++)
+                    canvas.drawText(strs[i], x, y + i * this.mTextHeight, this.mTextPaint);
+            } else {
+                float x = (getWidth()-mTextWidth)*1.0f/2;
+                float y = getHeight()*1.0f/2+mTextHeight*1.0f/2;
+                canvas.drawText(this.mText, x, y, this.mTextPaint);
+            }
         }
     }
 
@@ -128,10 +157,10 @@ public class GameItemView extends View {
     public void setNumber(int number) {
         /** 为0则隐藏 */
         if(number==0) {
-            mText = "";
+            mText = isHa ? mHaTexts.get(number) : "";
             setVisibility(INVISIBLE);
         } else {
-            mText = number + "";
+            mText = isHa ? mHaTexts.get(number) : String.valueOf(number);
             setVisibility(VISIBLE);
             if(mNumber<=0) {
                 ScaleAnimation sa = new ScaleAnimation(0, 1, 0, 1, getWidth() / 2, getHeight() / 2);
@@ -141,6 +170,7 @@ public class GameItemView extends View {
             }
         }
         this.mNumber = number;
+        if(mNumber > MAX_VALUE) mText = "??\n??";
 
         /** 根据数字设置背景颜色 */
         mBgColor = mBgColors.get(number, mBgColors.get(0));
@@ -154,10 +184,14 @@ public class GameItemView extends View {
         } else {
             mTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 28, getResources().getDisplayMetrics());
         }
+        if(isHa) {
+            mTextSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, getResources().getDisplayMetrics());
+        }
         mTextPaint.setTextSize(mTextSize);
         Paint.FontMetricsInt textMetrics = mTextPaint.getFontMetricsInt();
         mTextHeight = (int) Math.ceil(textMetrics.leading-textMetrics.ascent);
         mTextWidth = (int) mTextPaint.measureText(mText);
+        if (isHa) mTextWidth /= 2;
         mTextPaint.setColor(mTextColors.get(number, mTextColors.get(2)));
 
         /** 重绘 */
@@ -171,5 +205,10 @@ public class GameItemView extends View {
     public void setRadius(int radius) {
         this.mRadius = radius;
         invalidate();
+    }
+
+    public void setHa(boolean isHa) {
+        this.isHa = isHa;
+        setNumber(mNumber);
     }
 }
