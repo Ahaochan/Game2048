@@ -144,8 +144,8 @@ public class GameFragment extends BaseFragment {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentLayout.add1024();
-//                GameFragment.this.removeFragment();
+//                currentLayout.add1024();
+                GameFragment.this.removeFragment();
             }
         });
 

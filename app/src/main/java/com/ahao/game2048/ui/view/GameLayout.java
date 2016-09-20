@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -223,9 +222,7 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
                 }
 
                 /** 已经完成2048且提示过一次 */
-                Log.i(TAG, "onFling: "+is2048() +"," +isTipWin +"," + onGameListener);
                 if(is2048() && onGameListener!=null && !isTipWin){
-                    Log.i(TAG, "onFling: "+"win");
                     onGameListener.onWin();
                     isTipWin = true;
                 }
@@ -566,7 +563,6 @@ public class GameLayout extends GridLayout implements ViewTreeObserver.OnGlobalL
         mTime = (int) SharedPreferencesUtils.init(mContext, spName).get(Common.TIME, 0);
         isGameStart = (boolean) SharedPreferencesUtils.init(mContext, spName).get(Common.GAME_START, false);
         isTipWin = (boolean) SharedPreferencesUtils.init(mContext, spName).get(Common.TIPWIN, false);
-        Log.i(TAG, "restoreItems: "+isTipWin);
         if(onGameListener!=null) {
             onGameListener.onMove(mMoves);
             onGameListener.onTimeChange(mTime);
